@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>啊对对队 - 中国地理探索</title>
+    <style>
+        /* 模态框背景 */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        /* 模态框内容 */
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 70%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        /* 关闭按钮 */
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            overflow-x: hidden;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-image: url('背景.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            position: relative;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1rem;
+            color: #f0c344;
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+        }
+        
+        .featured {
+            padding: 3rem 0;
+            background-color: #fff;
+        }
+        
+        .featured-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 2.5rem;
+        }
+        
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .featured-item {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .featured-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .featured-img {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .featured-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .featured-item:hover .featured-img img {
+            transform: scale(1.1);
+        }
+        
+        .featured-content {
+            padding: 1.5rem;
+        }
+        
+        .featured-title-item {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .featured-desc {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .read-more {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #f0c344;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .read-more:hover {
+            background-color: #e0b334;
+        }
+        
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .footer-section {
+            width: 300px;
+            margin: 1rem;
+        }
+        
+        .footer-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #f0c344;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            color: #999;
+            font-size: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            .featured-item {
+                width: 90%;
+            }
+            .logo {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .featured-item {
+                width: 95%;
+                margin: 1rem 0;
+            }
+            .featured-content {
+                padding: 1rem;
+            }
+            .featured-title-item {
+                font-size: 1.2rem;
+            }
+            .featured-desc {
+                font-size: 0.9rem;
+            }
+            .read-more {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 模态框1 - 长城 -->
+    <div class="modal" id="modal1">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle1">万里长城</h2>
+            <p id="modalText1">
+                长城（The Great Wall），又称万里长城，是中国古代的军事防御工事，是一道高大、坚固而且连绵不断的长垣，用以限隔敌骑的行动。 长城是中国古代的军事防御工事，是一道高大、坚固而且连绵不断的长垣，用以限隔敌骑的行动。长城不是一道单纯孤立的城墙，而是以城墙为主体，同大量的城、障、亭、标相结合的防御体系。依据长城形成了长城文化。是弘扬中华优秀传统文化的重要力量。 长城修筑的历史可上溯到西周时期，发生在首都镐京（今陕西西安）的著名典故“烽火戏诸侯”就源于此。春秋战国时期，列国争霸，互相防守，长城修筑进入第一个高潮，但此时修筑的长度都比较短。秦灭六国统一天下后，秦始皇连接和修缮战国长城，始有万里长城之称
+                。明朝是最后一个大修长城的朝代，人们所看到的长城多是此时修筑 长城资源主要分布在河北、北京、天津、山西、陕西、甘肃、内蒙古、黑龙江、吉林、辽宁、山东、河南、青海、宁夏、新疆共15个省、自治区、直辖市。其中河北省境内长度2498.54千米 ，陕西省境内长度1838千米 。根据文物和测绘部门的全国性长城资源调查结果，明长城总长度为8851.8千米，秦汉及早期长城超过1万千米，总长超过2.1万千米 。现存长城文物本体包括长城墙体、壕堑、界壕、单体建筑、关堡、相关设施等各类遗存，总计4.3万余处（座/段）
+                。
+            </p>
+        </div>
+    </div>
+
+    <!-- 模态框2 - 张家界 -->
+    <div class="modal" id="modal2">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle2">张家界国家森林公园</h2>
+            <p id="modalText2">张家界的地层复杂多样，造化了当地的特色景观。主要有山地、岩溶、丘陵、岗地和平原等，山地面积占总面积的76%， 其中最具特色的是石英砂岩峰林地貌，为世界罕见。城市地势西北高，沿澧水向东南倾斜。在市域另一个突出的表现是由于地壳上升， 溪流向下切割作用加大，来不及将河流拓宽，而使河谷形成隘谷、峡谷。河的谷底极窜成线形，两壁陡峻，滩多水急。张家界市澧水源头、溇水上游、茅岩河段，就是这种河谷地貌。
+            </p>
+        </div>
+    </div>
+
+    <!-- 模态框3 - 西湖 -->
+    <div class="modal" id="modal3">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle3">杭州西湖</h2>
+            <p id="modalText3">西湖，又名钱塘湖，位于中国浙江省杭州市西湖区龙井路1号，杭州市区西部，汇水面积为21.22平方千米，湖面面积为6.38平方千米，为江南三大名湖之一。 西湖南、西、北三面环山，东邻城区，南部和钱塘江隔山相邻，湖中白堤、苏堤、杨公堤、赵公堤将湖面分割成若干水面，湖中有三岛，西湖群山以西湖为中心，由近及远可分为四个层次。 西湖流域内年径流量为1400万立方米，蓄水量近1400万立方米。西湖是一座设备齐全、管理完善的灌溉济运水库，通过河渠和闸门，为杭州市区及周边农田提供了充足的水源。西湖还可以协助调节钱塘江的水位，防止城市内涝。
+            </p>
+        </div>
+    </div>
+
+    <!-- 模态框4 - 敦煌莫高窟 -->
+    <div class="modal" id="modal4">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle4">敦煌莫高窟</h2>
+            <p id="modalText4">莫高窟，坐落于河西走廊的西部尽头的敦煌。它的开凿从十六国时期至元代，前后延续约1000年，这在中国石窟中绝无仅有。 它既是中国古代文明的一个璀璨的艺术宝库，也是古代丝绸之路上曾经发生过的不同文明之间对话和交流的重要见证。莫高窟现有洞窟735个， 保存壁画4.5万多平方米，彩塑2400余尊，唐宋木构窟檐5座，是中国石窟艺术发展演变的一个缩影，在石窟艺术中享有崇高的历史地位。窟内绘、 塑佛像及佛典内容，为佛徒修行、观像、礼拜处所。敦煌石窟是建筑、雕塑、壁画三者结合的立体艺术。
+                洞窟分南北两区：南区492个洞窟是莫高窟礼佛活动的场所，北区243个洞窟主要是僧人和工匠的居住地，内有修行和生活设施土炕坑、烟道、壁龛、灯台等，但多无彩塑和壁画。
+            </p>
+        </div>
+    </div>
+
+    <!-- 头部区域 -->
+    <div class="header" id="home">
+        <div class="subtitle">探索中华大地的壮丽山水</div>
+        <div class="logo">啊对对队</div>
+        <div class="subtitle">发现自然与人文的和谐之美</div>
+    </div>
+
+    <!-- 特色专题区域 -->
+    <div class="featured" id="featured">
+        <h2 class="featured-title">中国地理特色专题</h2>
+        <div class="featured-grid">
+            <!-- 特色专题项1 -->
+            <div class="featured-item">
+                <div class="featured-img">
+                    <img src="长城.jpg" alt="长城">
+                </div>
+                <div class="featured-content">
+                    <h3 class="featured-title-item">万里长城</h3>
+                    <p class="featured-desc">世界上最长的城墙，中国古老文明的象征，横跨多个省份的壮丽防御工程。</p>
+                    <a href="#" class="read-more" onclick="openModal(1)">了解更多</a>
+                </div>
+            </div>
+
+            <!-- 特色专题项2 -->
+            <div class="featured-item">
+                <div class="featured-img">
+                    <img src="张家界.jpg" alt="张家界">
+                </div>
+                <div class="featured-content">
+                    <h3 class="featured-title-item">张家界国家森林公园</h3>
+                    <p class="featured-desc">奇峰异石林立的自然奇观，电影《阿凡达》的灵感来源地，自然美景令人叹为观止。</p>
+                    <a href="#" class="read-more" onclick="openModal(2)">了解更多</a>
+                </div>
+            </div>
+
+            <!-- 特色专题项3 -->
+            <div class="featured-item">
+                <div class="featured-img">
+                    <img src="西湖.jpg" alt="西湖">
+                </div>
+                <div class="featured-content">
+                    <h3 class="featured-title-item">杭州西湖</h3>
+                    <p class="featured-desc">中国最美的湖泊之一，拥有悠久的历史文化背景和众多传说故事。</p>
+                    <a href="#" class="read-more" onclick="openModal(3)">了解更多</a>
+                </div>
+            </div>
+
+            <!-- 特色专题项4 -->
+            <div class="featured-item">
+                <div class="featured-img">
+                    <img src="莫高窟.jpg" alt="敦煌莫高窟">
+                </div>
+                <div class="featured-content">
+                    <h3 class="featured-title-item">敦煌莫高窟</h3>
+                    <p class="featured-desc">世界文化遗产，拥有大量精美的佛教壁画和雕塑，被誉为"东方卢浮宫"。</p>
+                    <a href="#" class="read-more" onclick="openModal(4)">了解更多</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚区域 -->
+    <div class="footer" id="about">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">关于我们</h3>
+                <ul class="footer-links">
+                    <li><a href="#">团队介绍</a></li>
+                    <li><a href="#">联系方式</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3 class="footer-title">资源</h3>
+                <ul class="footer-links">
+                    <li><a href="#">地理百科</a></li>
+                    <li><a href="#">地图下载</a></li>
+                </ul>
+            </div>
+
+            <div class="copyright">
+                &copy; 2025 啊对对队 版权所有
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取关闭按钮
+        var closeBtns = document.querySelectorAll(".close");
+
+        // 为关闭按钮添加点击事件
+        closeBtns.forEach(function(btn) {
+            btn.addEventListener("click", function() {
+                var modal = this.parentElement.parentElement;
+                modal.style.display = "none";
+            });
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener("click", function(event) {
+            if (event.target.classList.contains("modal")) {
+                event.target.style.display = "none";
+            }
+        });
+
+        // 打开指定模态框
+        function openModal(modalId) {
+            var modal = document.getElementById("modal" + modalId);
+            modal.style.display = "block";
+        }
+    </script>
+</body>
+
+</html>
